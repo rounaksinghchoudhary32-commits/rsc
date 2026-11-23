@@ -362,7 +362,7 @@ function nextQuestion(){
   showQuestion();
 }
 
-
+window.nextQuestion = nextQuestion;
 startQuiz();
   document.getElementById("tr").addEventListener("click",function(){clearInterval(run);run=null;left=1500;ts.textContent="Start";show();});
   if("serviceWorker" in navigator){window.addEventListener("load",function(){try{navigator.serviceWorker.register("./sw.js");}catch(e){}});}
