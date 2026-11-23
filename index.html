@@ -47,6 +47,66 @@ body{background:radial-gradient(circle at 50% 0%,#2a1458 0%,#0b0618 60%) fixed}
 .timer{background:#ffffff0d;backdrop-filter:blur(10px)}
 main{animation:fadein .8s ease}
 @keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  /* RsC MCQ DESIGN */
+.gm{
+  margin:26px auto;
+  max-width:420px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--surface);
+  padding:16px;
+  text-align:left;
+}
+
+.gm .gt{
+  font-weight:800;
+  font-size:1.3rem;
+  text-align:center;
+}
+
+.gm .gs{
+  color:var(--muted);
+  text-align:center;
+  margin:8px;
+}
+
+.gm .gh{
+  display:flex;
+  justify-content:space-between;
+  font-size:.9rem;
+  font-weight:600;
+}
+
+.gm .gq{
+  font-weight:600;
+  margin:18px 0;
+}
+
+.gm button{
+  width:100%;
+  padding:11px;
+  margin:6px 0;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#ffffff0d;
+  color:var(--ink);
+  font:inherit;
+}
+
+.gm button.ok{
+  background:#16a34a;
+  color:white;
+}
+
+.gm button.bad{
+  background:#dc2626;
+  color:white;
+}
+
+.gm #next{
+  background:var(--accent);
+  color:white;
+}
   </style>
 </head>
 <body>
@@ -73,6 +133,27 @@ main{animation:fadein .8s ease}
 
   <div class="timer"><div class="t" id="tm">25:00</div><div class="meta">Focus timer</div><div class="r"><button id="ts">Start</button><button id="tr">Reset</button></div></div>
   <p class="note">Results open on the search engine you choose.</p>
+  <div class="gm" id="quiz">
+
+  <div class="gt">RsC Class 10 MCQ</div>
+  <div class="gs">CBSE Board Practice</div>
+
+  <div class="gh">
+    <span id="progress">Question 1</span>
+    <span id="score">Score: 0</span>
+  </div>
+
+  <div class="gq" id="question"></div>
+
+  <div id="options"></div>
+
+  <button id="next" onclick="nextQuestion()">
+    Next Question →
+  </button>
+
+  <div class="gs" id="result"></div>
+
+  </div>
 </main>
 <script>
 var URLS={g:"https://www.google.com/search?q=",d:"https://duckduckgo.com/?q=",y:"https://www.youtube.com/results?search_query=",w:"https://en.wikipedia.org/w/index.php?search="};
@@ -110,6 +191,185 @@ q.focus();
     ts.textContent="Pause";
     run=setInterval(function(){left--;show();if(left<=0){clearInterval(run);run=null;ts.textContent="Start";left=1500;tm.textContent="Time is up. Take a 5 minute break.";}},1000);
   });
+  // RsC CLASS 10 QUESTION BANK
+
+const questions = [
+
+{
+subject:"Science",
+chapter:"Chemical Reactions",
+q:"Which gas is released when metals react with acids?",
+options:["Oxygen","Hydrogen","Nitrogen","Carbon dioxide"],
+answer:1
+},
+
+{
+subject:"Science",
+chapter:"Acids Bases and Salts",
+q:"What is the pH value of a neutral solution?",
+options:["0","7","10","14"],
+answer:1
+},
+
+{
+subject:"Maths",
+chapter:"Real Numbers",
+q:"What is the HCF of 12 and 18?",
+options:["2","3","6","9"],
+answer:2
+},
+
+{
+subject:"Maths",
+chapter:"Quadratic Equations",
+q:"What is the discriminant formula?",
+options:["b²+4ac","b²-4ac","a²-4bc","b-4ac"],
+answer:1
+},
+
+{
+subject:"Science",
+chapter:"Electricity",
+q:"What is the SI unit of electric current?",
+options:["Volt","Ohm","Ampere","Watt"],
+answer:2
+},
+
+{
+subject:"Social Science",
+chapter:"Nationalism in India",
+q:"Who led the Dandi March in 1930?",
+options:["Nehru","Mahatma Gandhi","Patel","Bose"],
+answer:1
+},
+
+{
+subject:"Biology",
+chapter:"Life Processes",
+q:"Which organ pumps blood?",
+options:["Lungs","Kidney","Heart","Liver"],
+answer:2
+}
+
+];
+
+let pool=[];
+let current=0;
+let score=0;
+let answered=false;
+
+function shuffle(array){
+  return array
+    .map(value=>({value,sort:Math.random()}))
+    .sort((a,b)=>a.sort-b.sort)
+    .map(item=>item.value);
+}
+
+function startQuiz(){
+
+  pool=shuffle([...questions]);
+  current=0;
+  score=0;
+
+  showQuestion();
+}
+
+function showQuestion(){
+
+  answered=false;
+
+  if(current>=pool.length){
+
+    document.getElementById("question").textContent=
+      "Quiz Completed!";
+
+    document.getElementById("options").innerHTML="";
+
+    document.getElementById("result").textContent=
+      "Your Score: "+score+"/"+pool.length;
+
+    document.getElementById("next").textContent=
+      "Restart Quiz";
+
+    return;
+  }
+
+  let q=pool[current];
+
+  document.getElementById("progress").textContent=
+    "Question "+(current+1)+"/"+pool.length;
+
+  document.getElementById("score").textContent=
+    "Score: "+score;
+
+  document.getElementById("question").textContent=q.q;
+
+  document.getElementById("options").innerHTML="";
+
+  q.options.forEach((option,index)=>{
+
+    let btn=document.createElement("button");
+
+    btn.textContent=option;
+
+    btn.onclick=()=>checkAnswer(index,btn);
+
+    document.getElementById("options").appendChild(btn);
+
+  });
+
+  document.getElementById("result").textContent="";
+  document.getElementById("next").textContent="Next Question →";
+}
+
+function checkAnswer(index,btn){
+
+  if(answered)return;
+
+  answered=true;
+
+  let q=pool[current];
+
+  if(index===q.answer){
+
+    score++;
+
+    btn.classList.add("ok");
+
+    document.getElementById("result").textContent=
+      "Correct Answer!";
+
+  }else{
+
+    btn.classList.add("bad");
+
+    document.getElementById("result").textContent=
+      "Correct Answer: "+q.options[q.answer];
+  }
+
+  document.getElementById("score").textContent=
+    "Score: "+score;
+}
+
+function nextQuestion(){
+
+  if(current>=pool.length){
+    startQuiz();
+    return;
+  }
+
+  if(!answered){
+    document.getElementById("result").textContent=
+      "Select an answer first!";
+    return;
+  }
+
+  current++;
+
+  showQuestion();
+}
+
+startQuiz();
   document.getElementById("tr").addEventListener("click",function(){clearInterval(run);run=null;left=1500;ts.textContent="Start";show();});
   if("serviceWorker" in navigator){window.addEventListener("load",function(){try{navigator.serviceWorker.register("./sw.js");}catch(e){}});}
 })();
