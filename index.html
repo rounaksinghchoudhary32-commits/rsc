@@ -350,17 +350,10 @@ function checkAnswer(index,btn){
   document.getElementById("score").textContent=
     "Score: "+score;
 }
-
 function nextQuestion(){
 
-  if(current>=pool.length){
+  if(current >= pool.length){
     startQuiz();
-    return;
-  }
-
-  if(!answered){
-    document.getElementById("result").textContent=
-      "Select an answer first!";
     return;
   }
 
@@ -368,6 +361,7 @@ function nextQuestion(){
 
   showQuestion();
 }
+
 
 startQuiz();
   document.getElementById("tr").addEventListener("click",function(){clearInterval(run);run=null;left=1500;ts.textContent="Start";show();});
